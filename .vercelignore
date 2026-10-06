@@ -1,0 +1,8 @@
+# nunca enviar segredos nem arquivos locais
+.env
+.env.local
+.env*.local
+node_modules
+.next
+verificacao.txt
+*.zip

@@ -1,0 +1,43 @@
+{
+  "name": "top-burger-os",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TOP BURGER OS — sistema operacional SaaS para hamburguerias",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --disable-warning=ExperimentalWarning --import ./tests/unit/register.mjs --experimental-strip-types --test tests/unit/*.test.ts",
+    "test:db": "bash supabase/tests/run.sh",
+    "test:e2e": "playwright test",
+    "db:bundle": "node scripts/bundle-sql.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.7.0",
+    "@supabase/supabase-js": "2.57.4",
+    "next": "15.5.4",
+    "qrcode": "1.5.4",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "server-only": "0.0.1",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.1",
+    "@playwright/test": "1.55.0",
+    "@tailwindcss/postcss": "4.1.13",
+    "@types/node": "22.18.6",
+    "@types/qrcode": "1.5.5",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "eslint": "9.36.0",
+    "eslint-config-next": "15.5.4",
+    "tailwindcss": "4.1.13",
+    "typescript": "5.9.2"
+  }
+}

@@ -1,0 +1,16 @@
+node_modules
+.next
+out
+build
+.env
+.env.local
+.env*.local
+*.tsbuildinfo
+.vercel
+playwright-report
+test-results
+tests/e2e/.auth
+.DS_Store
+supabase/.temp
+supabase/.branches
+verificacao.txt
