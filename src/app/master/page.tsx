@@ -43,11 +43,11 @@ export default async function MasterHome() {
       <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <Card>
           <CardHeader title="Receita de assinaturas" description="Faturas pagas por mês" />
-          <BarChart data={o.growth.map((g) => ({ label: label(g.month), value: Number(g.revenue), hint: `${g.orgs} nova(s)` }))} format={money} highlightLast />
+          <BarChart data={o.growth.map((g) => ({ label: label(g.month), value: Number(g.revenue), hint: `${g.orgs} nova(s)` }))} format="money" highlightLast />
         </Card>
         <Card>
           <CardHeader title="Empresas por plano" description="Ativas e em trial" />
-          <RankList items={o.plans.map((p) => ({ label: p.name, value: p.count }))} format={(v) => integer(v)} />
+          <RankList items={o.plans.map((p) => ({ label: p.name, value: p.count }))} />
         </Card>
       </div>
       <Card className="mt-5">
