@@ -1,4 +1,5 @@
-import { PeriodPicker, resolvePeriod } from "@/components/app/period-picker";
+import { PeriodPicker } from "@/components/app/period-picker";
+import { resolvePeriod } from "@/lib/period";
 import { PageHeader } from "@/components/ui/layout";
 import { requirePage } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
