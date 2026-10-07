@@ -109,7 +109,7 @@ export function LineChart({ data, height = 200, format = "number" }: { data: { l
               className="pointer-events-none absolute z-10 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink px-2 py-1 text-xs text-white shadow-pop"
               style={{ left: `${Math.min(88, Math.max(12, pts[hover].x))}%`, top: -6 }}
             >
-              <span className="text-char-200">{data[hover].hint ?? data[hover].label}</span> <span className="num font-semibold">{format(data[hover].value)}</span>
+              <span className="text-char-200">{data[hover].hint ?? data[hover].label}</span> <span className="num font-semibold">{formatValue(format, data[hover].value)}</span>
             </div>
           </>
         )}
