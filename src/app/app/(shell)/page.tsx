@@ -80,14 +80,14 @@ export default async function DashboardPage() {
         <div className="space-y-5">
           <Card>
             <CardHeader title="Vendas — últimos 14 dias" description={`${money(s.sales_14d.reduce((a, d) => a + Number(d.revenue), 0))} em ${integer(s.sales_14d.reduce((a, d) => a + d.orders, 0))} pedidos`} />
-            <LineChart data={s.sales_14d.map((d) => ({ label: shortDate(d.date), value: Number(d.revenue), hint: `${shortDate(d.date)} · ${d.orders} pedidos ·` }))} format={money} height={210} />
+            <LineChart data={s.sales_14d.map((d) => ({ label: shortDate(d.date), value: Number(d.revenue), hint: `${shortDate(d.date)} · ${d.orders} pedidos ·` }))} format="money" height={210} />
           </Card>
           <Card>
             <CardHeader title="Pedidos por horário" description="Barras: hoje · fundo: média diária dos últimos 30 dias" />
             <BarChart
               data={s.by_hour.slice(10).map((h) => ({ label: `${h.hour}h`, value: h.today, hint: `${h.hour}h–${h.hour + 1}h · média ${number(h.avg)} ·` }))}
               ghost={s.by_hour.slice(10).map((h) => Number(h.avg))}
-              format={(v) => `${v} pedidos`}
+              format="orders"
               height={150}
             />
           </Card>
@@ -166,7 +166,7 @@ export default async function DashboardPage() {
 
           <Card>
             <CardHeader title="Mais vendidos" description="Últimos 7 dias" />
-            <RankList items={s.top_products.map((p) => ({ label: p.name, value: p.qty, sub: money(p.revenue) }))} format={(v) => `${v}×`} />
+            <RankList items={s.top_products.map((p) => ({ label: p.name, value: p.qty, sub: money(p.revenue) }))} format="times" />
           </Card>
         </div>
       </div>
