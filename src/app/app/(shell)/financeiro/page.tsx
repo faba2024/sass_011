@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { PeriodPicker, resolvePeriod } from "@/components/app/period-picker";
+import { PeriodPicker } from "@/components/app/period-picker";
+import { resolvePeriod } from "@/lib/period";
 import { LinkButton } from "@/components/ui/button";
 import { BarChart, RankList, SplitBar } from "@/components/ui/charts";
 import { Card, CardHeader, PageHeader } from "@/components/ui/layout";
@@ -47,7 +48,7 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
         <div className="space-y-5">
           <Card>
             <CardHeader title="Entradas por dia" description="Receita líquida de pedidos pagos" />
-            <BarChart data={f.daily.map((d) => ({ label: shortDate(d.date), value: Number(d.income), hint: `${shortDate(d.date)} · despesas ${money(d.expenses)} · receita` }))} format={money} height={190} />
+            <BarChart data={f.daily.map((d) => ({ label: shortDate(d.date), value: Number(d.income), hint: `${shortDate(d.date)} · despesas ${money(d.expenses)} · receita` }))} format="money" height={190} />
           </Card>
           <Card>
             <CardHeader title="Resultado do período" description="DRE simplificado" />
@@ -64,11 +65,11 @@ export default async function FinancePage({ searchParams }: { searchParams: Prom
         <div className="space-y-5">
           <Card>
             <CardHeader title="Formas de pagamento" />
-            {f.by_method.length ? <SplitBar parts={f.by_method.map((m) => ({ label: PAYMENT_METHOD[m.method], value: Number(m.amount), color: METHOD_COLOR[m.method] }))} format={money} /> : <p className="text-[13px] text-muted">Sem receitas no período.</p>}
+            {f.by_method.length ? <SplitBar parts={f.by_method.map((m) => ({ label: PAYMENT_METHOD[m.method], value: Number(m.amount), color: METHOD_COLOR[m.method] }))} format="money" /> : <p className="text-[13px] text-muted">Sem receitas no período.</p>}
           </Card>
           <Card>
             <CardHeader title="Despesas por categoria" />
-            <RankList items={f.expenses_by_category.map((e) => ({ label: EXPENSE_CATEGORIES[e.category] ?? e.category, value: Number(e.amount) }))} format={money} empty="Nenhuma despesa paga" />
+            <RankList items={f.expenses_by_category.map((e) => ({ label: EXPENSE_CATEGORIES[e.category] ?? e.category, value: Number(e.amount) }))} format="money" empty="Nenhuma despesa paga" />
           </Card>
           <Card>
             <CardHeader title="Contas a pagar (7 dias)" actions={<Link href="/app/despesas" className="text-xs font-medium text-ember-600 hover:underline">Ver todas</Link>} />
