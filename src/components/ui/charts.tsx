@@ -1,19 +1,29 @@
 "use client";
 import { useMemo, useState, type ReactNode } from "react";
+import { money } from "@/lib/format";
 import { cn } from "@/lib/utils";
+
+type ValueFormat = "number" | "money" | "orders" | "times";
+
+function formatValue(format: ValueFormat, value: number) {
+  if (format === "money") return money(value);
+  if (format === "orders") return `${value} pedidos`;
+  if (format === "times") return `${value}×`;
+  return String(value);
+}
 
 /** Colunas (HTML/CSS: nítido em qualquer densidade de tela) */
 export function BarChart({
   data,
   height = 180,
-  format = (v: number) => String(v),
+  format = "number",
   highlightLast,
   color = "bg-ember-500",
   ghost,
 }: {
   data: { label: string; value: number; hint?: string }[];
   height?: number;
-  format?: (v: number) => string;
+  format?: ValueFormat;
   highlightLast?: boolean;
   color?: string;
   /** série de referência desenhada atrás (ex.: média) */
@@ -41,7 +51,7 @@ export function BarChart({
               />
               {hover === i && (
                 <div className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-ink px-2 py-1 text-xs text-white shadow-pop">
-                  <span className="text-char-200">{d.hint ?? d.label}</span> <span className="num font-semibold">{format(d.value)}</span>
+                  <span className="text-char-200">{d.hint ?? d.label}</span> <span className="num font-semibold">{formatValue(format, d.value)}</span>
                 </div>
               )}
             </div>
@@ -60,7 +70,7 @@ export function BarChart({
 }
 
 /** Linha com área (SVG vetorial + rótulos em HTML) */
-export function LineChart({ data, height = 200, format = (v: number) => String(v) }: { data: { label: string; value: number; hint?: string }[]; height?: number; format?: (v: number) => string }) {
+export function LineChart({ data, height = 200, format = "number" }: { data: { label: string; value: number; hint?: string }[]; height?: number; format?: ValueFormat }) {
   const [hover, setHover] = useState<number | null>(null);
   const max = Math.max(1, ...data.map((d) => d.value));
   const pts = useMemo(
@@ -116,7 +126,7 @@ export function LineChart({ data, height = 200, format = (v: number) => String(v
 }
 
 /** Ranking com barras proporcionais */
-export function RankList({ items, format = (v: number) => String(v), empty = "Sem dados no período" }: { items: { label: ReactNode; value: number; sub?: ReactNode }[]; format?: (v: number) => string; empty?: string }) {
+export function RankList({ items, format = "number", empty = "Sem dados no período" }: { items: { label: ReactNode; value: number; sub?: ReactNode }[]; format?: ValueFormat; empty?: string }) {
   const max = Math.max(1, ...items.map((i) => i.value));
   if (!items.length) return <p className="py-6 text-center text-[13px] text-muted">{empty}</p>;
   return (
@@ -129,7 +139,7 @@ export function RankList({ items, format = (v: number) => String(v), empty = "Se
               <span className="truncate text-ink">{it.label}</span>
             </span>
             <span className="num shrink-0 font-medium">
-              {format(it.value)}
+              {formatValue(format, it.value)}
               {it.sub && <span className="ml-1.5 font-normal text-muted">{it.sub}</span>}
             </span>
           </div>
@@ -143,13 +153,13 @@ export function RankList({ items, format = (v: number) => String(v), empty = "Se
 }
 
 /** Barra 100% empilhada (participação) */
-export function SplitBar({ parts, format = (v: number) => String(v) }: { parts: { label: string; value: number; color: string }[]; format?: (v: number) => string }) {
+export function SplitBar({ parts, format = "number" }: { parts: { label: string; value: number; color: string }[]; format?: ValueFormat }) {
   const total = parts.reduce((a, p) => a + p.value, 0) || 1;
   return (
     <div>
       <div className="flex h-2.5 overflow-hidden rounded-full bg-sunken">
         {parts.map((p) => (
-          <div key={p.label} className={p.color} style={{ width: `${(p.value / total) * 100}%` }} title={`${p.label}: ${format(p.value)}`} />
+          <div key={p.label} className={p.color} style={{ width: `${(p.value / total) * 100}%` }} title={`${p.label}: ${formatValue(format, p.value)}`} />
         ))}
       </div>
       <ul className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1.5">
