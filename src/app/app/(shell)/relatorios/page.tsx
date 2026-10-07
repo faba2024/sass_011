@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { PeriodPicker, resolvePeriod } from "@/components/app/period-picker";
+import { PeriodPicker } from "@/components/app/period-picker";
+import { resolvePeriod } from "@/lib/period";
 import { Badge } from "@/components/ui/badge";
 import { BarChart, RankList, SplitBar } from "@/components/ui/charts";
 import { Card, CardHeader, PageHeader, Table, Td, Th } from "@/components/ui/layout";
@@ -59,19 +60,19 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       <div className="mt-5 grid gap-5 xl:grid-cols-2">
         <Card className="xl:col-span-2">
           <CardHeader title="Vendas por dia" actions={<ExportButton name="vendas-por-dia" rows={r.by_day} columns={[{ key: "date", label: "Data" }, { key: "orders", label: "Pedidos" }, { key: "revenue", label: "Faturamento" }]} />} />
-          <BarChart data={r.by_day.map((d) => ({ label: shortDate(d.date), value: Number(d.revenue), hint: `${shortDate(d.date)} · ${d.orders} pedidos ·` }))} format={money} height={200} />
+          <BarChart data={r.by_day.map((d) => ({ label: shortDate(d.date), value: Number(d.revenue), hint: `${shortDate(d.date)} · ${d.orders} pedidos ·` }))} format="money" height={200} />
         </Card>
         <Card>
           <CardHeader title="Horários de pico" description={peak && peak.orders ? `Pico às ${peak.hour}h (${peak.orders} pedidos)` : undefined} />
-          <BarChart data={r.by_hour.filter((h) => h.hour >= 10).map((h) => ({ label: `${h.hour}h`, value: h.orders, hint: `${h.hour}h · ${money(h.revenue)} ·` }))} format={(v) => `${v} pedidos`} height={160} color="bg-mustard-500" />
+          <BarChart data={r.by_hour.filter((h) => h.hour >= 10).map((h) => ({ label: `${h.hour}h`, value: h.orders, hint: `${h.hour}h · ${money(h.revenue)} ·` }))} format="orders" height={160} color="bg-mustard-500" />
         </Card>
         <Card>
           <CardHeader title="Dias mais fortes" description={bestDay && Number(bestDay.revenue) ? `${WEEKDAYS_SHORT[bestDay.dow]} lidera com ${money(bestDay.revenue)}` : undefined} />
-          <BarChart data={r.by_weekday.map((d) => ({ label: WEEKDAYS_SHORT[d.dow], value: Number(d.revenue), hint: `${d.orders} pedidos ·` }))} format={money} height={160} color="bg-blueberry-500" />
+          <BarChart data={r.by_weekday.map((d) => ({ label: WEEKDAYS_SHORT[d.dow], value: Number(d.revenue), hint: `${d.orders} pedidos ·` }))} format="money" height={160} color="bg-blueberry-500" />
         </Card>
         <Card>
           <CardHeader title="Mais vendidos" actions={<ExportButton name="mais-vendidos" rows={r.top_products} columns={[{ key: "name", label: "Produto" }, { key: "qty", label: "Quantidade" }, { key: "revenue", label: "Receita" }]} />} />
-          <RankList items={r.top_products.map((p) => ({ label: p.name, value: p.qty, sub: money(p.revenue) }))} format={(v) => `${v}×`} />
+          <RankList items={r.top_products.map((p) => ({ label: p.name, value: p.qty, sub: money(p.revenue) }))} format="times" />
         </Card>
         <Card>
           <CardHeader title="Menos vendidos" description="Candidatos a sair do cardápio ou ganhar destaque" />
@@ -79,12 +80,12 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
         </Card>
         <Card>
           <CardHeader title="Delivery × retirada × local" />
-          <SplitBar parts={r.by_type.map((t) => ({ label: ORDER_TYPE[t.type].short, value: Number(t.revenue), color: TYPE_COLOR[t.type] }))} format={money} />
+          <SplitBar parts={r.by_type.map((t) => ({ label: ORDER_TYPE[t.type].short, value: Number(t.revenue), color: TYPE_COLOR[t.type] }))} format="money" />
           <ul className="mt-3 space-y-1 text-[13px]">{r.by_type.map((t) => <li key={t.type} className="flex justify-between"><span>{ORDER_TYPE[t.type].label}</span><span className="num text-muted">{t.orders} pedidos · {money(t.revenue)}</span></li>)}</ul>
         </Card>
         <Card>
           <CardHeader title="Formas de pagamento" />
-          <SplitBar parts={r.by_payment.map((p) => ({ label: PAYMENT_METHOD[p.method], value: Number(p.revenue), color: PAY_COLOR[p.method] }))} format={money} />
+          <SplitBar parts={r.by_payment.map((p) => ({ label: PAYMENT_METHOD[p.method], value: Number(p.revenue), color: PAY_COLOR[p.method] }))} format="money" />
           <ul className="mt-3 space-y-1 text-[13px]">{r.by_payment.map((p) => <li key={p.method} className="flex justify-between"><span>{PAYMENT_METHOD[p.method]}</span><span className="num text-muted">{p.orders} pedidos · {money(p.revenue)}</span></li>)}</ul>
         </Card>
         <Card className="xl:col-span-2" padded={false}>
